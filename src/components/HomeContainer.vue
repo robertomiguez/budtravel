@@ -10,7 +10,7 @@
         aria-label="Email"
         placeholder="seu@email.com"
       ></ion-input>
-      <ion-button>
+      <ion-button color="light">
         assine
         <ion-icon
           slot="end"
@@ -59,11 +59,15 @@ defineProps({
 }
 
 #subscribe ion-input {
-  margin-right: 10px;
+  margin-right: 20px;
+}
+
+#subscribe ion-button {
+  margin-right: 20px;
 }
 
 #description {
-  padding-bottom: 70px;
+  padding-bottom: 50px;
 }
 
 @media (min-width: 48em) {
