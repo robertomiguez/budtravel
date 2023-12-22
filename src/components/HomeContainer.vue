@@ -39,7 +39,7 @@ defineProps({
   position: relative;
   left: 0;
   right: 0;
-  top: 30%;
+  top: 33%;
   transform: translateY(-50%);
 }
 
@@ -64,5 +64,11 @@ defineProps({
 
 #description {
   padding-bottom: 70px;
+}
+
+@media (min-width: 48em) {
+  #container {
+    top: 20%;
+  }
 }
 </style>
