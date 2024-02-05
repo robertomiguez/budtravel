@@ -4,41 +4,27 @@
     <p>List Tickets</p>
   </div>
   <h1>Flexbox Blog-Card</h1> -->
-
   <div class="blog-wrapper">
-    <div class="blog-card">
+    <div
+      class="blog-card"
+      :key="ticket.id"
+      v-for="ticket in tickets"
+    >
       <div class="card-img">
-        <img
-          src="https://images.unsplash.com/photo-1518235506717-e1ed3306a89b?ixlib=rb-1.2.1&
-          ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80"
-        />
+        <img :src="ticket.image" />
         <h1>New York</h1>
       </div>
       <div class="card-details">
         <span>
-          <ion-icon :icon="calendarOutline"></ion-icon> 20/Fev - 27/Fev</span
-        ><span> <ion-icon :icon="cashOutline"></ion-icon> 402,00</span>
+          <ion-icon :icon="calendarOutline"></ion-icon>
+          {{ ticket.outboundLeg[0].departureDate }}x</span
+        ><span>
+          <ion-icon :icon="cashOutline"></ion-icon>
+          {{ useReals.format(ticket.price) }}</span
+        >
       </div>
       <div class="card-text">
         <p>Tarifa Basic: item pessoal, bagagem de mão</p>
-      </div>
-      <div class="read-more">Leia mais</div>
-    </div>
-    <div class="blog-card">
-      <div class="card-img">
-        <img
-          src="https://images.unsplash.com/photo-1445368794737-0cf251429ca0?ixlib=rb-1.2.1&
-          ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1567&q=80"
-        />
-        <h1>San Francisco</h1>
-      </div>
-      <div class="card-details">
-        <span>
-          <ion-icon :icon="calendarOutline"></ion-icon> 15/Mar - 23/Mar</span
-        ><span> <ion-icon :icon="cashOutline"></ion-icon> 492,00</span>
-      </div>
-      <div class="card-text">
-        <p>Tarifa Classic: item pessoal, bagagem de mão, bagagem despachada</p>
       </div>
       <div class="read-more">Leia mais</div>
     </div>
@@ -48,8 +34,30 @@
 <script setup lang="ts">
 import { IonIcon } from '@ionic/vue';
 import { calendarOutline, cashOutline } from 'ionicons/icons';
+import { onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useSettingsStore } from '@/stores/settingsStore';
+import TicketService from '@/services/TicketService';
+import type { Ticket } from '@/types/Ticket';
+import { useReals } from '@/composables/currency';
+
 defineProps({
   name: String,
+});
+
+const settingsStore = useSettingsStore();
+const { iataCode, loading } = storeToRefs(settingsStore);
+const tickets = ref<Ticket[]>([]);
+
+onMounted(async () => {
+  try {
+    loading.value = true;
+    console.log(iataCode);
+    tickets.value = await TicketService.getTicketsByIata('SDU');
+    loading.value = false;
+  } catch (e) {
+    console.error('Failed to fetch', e);
+  }
 });
 </script>
 
